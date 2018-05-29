@@ -1,5 +1,6 @@
 package nathanebba;
 
+import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /*
@@ -12,23 +13,33 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class Stage {
     /* Private variables */
     private Item data; // The item currently in the stage.
-    private Stage[] next; // These are the stages that follow these.
-    private Stage[] prev; // These are the stages previous to this.
-    private ArrayBlockingQueue<Item> qNext; // The queue that stores the items after being processed by this stage.
-    private ArrayBlockingQueue<Item> qPrev; // The queue that stores items that are going to be processed by this stage.
+    private LinkedList<Stage> next; // These are the stages that follow these.
+    private LinkedList<Stage> prev; // These are the stages previous to this.
+    private ArrayBlockingQueue<Item> storageNext; // Queue that stores items in line to be processed.
+    private ArrayBlockingQueue<Item> storagePrev; // Queue that stores items processed by this stage.
 
-    /* Constructors */
-    Stage() {
+    /* Constructors. Initialize the private variables. */
+    Stage(ArrayBlockingQueue<Item> p, ArrayBlockingQueue<Item> n) {
+        next = new LinkedList<>();
+        prev = new LinkedList<>();
+        storageNext = n;
+        storagePrev = p;
+    }
+
+    /* Main action of the storage */
+    public void process() {
 
     }
 
-    Stage(Stage next, Stage prev, ArrayBlockingQueue<Item> qNext, ArrayBlockingQueue<Item> qPrev) {
-
+    /* Add a next stage to be done after this stage. This can be called multiple times to add more than 1 stage. */
+    public void addNext(Stage s) {
+        next.add(s);
     }
 
-    /* Setters and Getters */
+    /* Adds a link to the previous stage done before this one. This can be called multiple times to add more than 1. */
+    public void addPrev(Stage s) {
+        prev.add(s);
+    }
 
-    /* Methods */
 
-    /* Helper Functions */
 }
