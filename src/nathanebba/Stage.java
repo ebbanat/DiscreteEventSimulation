@@ -11,12 +11,11 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class Stage {
     /* Private variables */
-    private Item data;
-    private Stage next;
-    private Stage prev;
-    private ArrayBlockingQueue<Item> qNext;
-    private ArrayBlockingQueue<Item> qPrev;
-
+    private Item data; // The item currently in the stage.
+    private Stage[] next; // These are the stages that follow these.
+    private Stage[] prev; // These are the stages previous to this.
+    private ArrayBlockingQueue<Item> qNext; // The queue that stores the items after being processed by this stage.
+    private ArrayBlockingQueue<Item> qPrev; // The queue that stores items that are going to be processed by this stage.
 
     /* Constructors */
     Stage() {
@@ -24,52 +23,10 @@ public class Stage {
     }
 
     Stage(Stage next, Stage prev, ArrayBlockingQueue<Item> qNext, ArrayBlockingQueue<Item> qPrev) {
-        this.next = next;
-        this.prev = prev;
-        this.qNext = qNext;
-        this.qPrev = qPrev;
+
     }
 
     /* Setters and Getters */
-    public Stage getNext() {
-        return next;
-    }
-
-    public void setNext(Stage next) {
-        this.next = next;
-    }
-
-    public Stage getPrev() {
-        return prev;
-    }
-
-    public void setPrev(Stage prev) {
-        this.prev = prev;
-    }
-
-    public void setData(Item data) {
-        this.data = data;
-    }
-
-    public Item getData() {
-        return data;
-    }
-
-    public ArrayBlockingQueue<Item> getqNext() {
-        return qNext;
-    }
-
-    public void setqNext(ArrayBlockingQueue<Item> qNext) {
-        this.qNext = qNext;
-    }
-
-    public ArrayBlockingQueue<Item> getqPrev() {
-        return qPrev;
-    }
-
-    public void setqPrev(ArrayBlockingQueue<Item> qPrev) {
-        this.qPrev = qPrev;
-    }
 
     /* Methods */
 
