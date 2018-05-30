@@ -28,9 +28,9 @@ public class Start extends Stage {
 
     @Override
     public void execute() {
-
         /* Attempt to move an item into the exiting queue */
         if (storageNext.remainingCapacity() == 0) {
+            System.out.println("Start blocked.");
             block();
         } else {
             /* moves current item to the exiting queue */
@@ -38,6 +38,17 @@ public class Start extends Stage {
 
             /* Create another event for Start */
             EventManager.add(new Event(this));
+
+            /* Execute event for next stage */
+            executeNextStage();
+
+        }
+    }
+
+    /* executes all the next for all the stages */
+    private void executeNextStage() {
+        for (Stage s : next) {
+            s.execute();
         }
     }
 

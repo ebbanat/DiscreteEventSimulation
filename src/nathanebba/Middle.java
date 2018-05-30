@@ -32,6 +32,20 @@ public class Middle extends Stage {
 
     @Override
     public void execute() {
+        /* If the stage was starving */
+        if (starving) {
+            /* Grab an item from the previous queue. */
+            data = storagePrev.poll();
+            EventManager.add(new Event(this));
+            unstarve(); // Stage would no longer be starving.
+            return;
+        }
+
+        if (blocked) {
+            unblock();
+            return;
+        }
+
         if (storageNext.remainingCapacity() == 0) {
             /* block this stage */
             block();

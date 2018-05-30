@@ -61,7 +61,7 @@ public class Main {
         /* Get the Event Manager rolling */
         EventManager.add(new Event(s0)); // Create an event from s0.
 
-        while (globalTime < 10000000) {
+        while (globalTime < 10000000) { // 10 million seconds for the simulation time
             Event current = EventManager.poll(); // If implemented right it should never be empty.
 
             /* Increment global time */
