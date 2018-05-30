@@ -44,27 +44,22 @@ public class Main {
         
         /* Link stages sequence */
         s0.addNext(s1);
-
         s1.addPrev(s0);
         s1.addNext(s2a);
         s1.addNext(s2b);
-
         s2a.addPrev(s1);
         s2a.addNext(s3);
-
         s2b.addNext(s1);
         s2b.addNext(s3);
-
         s3.addPrev(s2a);
         s3.addPrev(s2b);
         s3.addNext(s4a);
         s3.addNext(s4b);
-
         s4a.addPrev(s3);
         s4a.addNext(s5);
-
         s4b.addPrev(s3);
         s4b.addNext(s5);
+
 
         s1.execute();
         s4b.execute();
