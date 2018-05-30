@@ -1,7 +1,11 @@
 package nathanebba;
 
+import sun.plugin2.message.EventMessage;
+
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
+
+import static nathanebba.Main.EventManager;
 
 /*
     Programmer: Nathan Ebba
@@ -24,7 +28,17 @@ public class Start extends Stage {
 
     @Override
     public void execute() {
-        System.out.println("Start.execute");
+
+        /* Attempt to move an item into the exiting queue */
+        if (storageNext.remainingCapacity() == 0) {
+            block();
+        } else {
+            /* moves current item to the exiting queue */
+            storageNext.add(new Item());
+
+            /* Create another event for Start */
+            EventManager.add(new Event(this));
+        }
     }
 
     /* Add a next stage to be done after this stage. This can be called multiple times to add more than 1 stage. */

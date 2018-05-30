@@ -1,29 +1,27 @@
 package nathanebba;
 
 import java.util.Arrays;
-import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class Main {
-    /* Global data structure */
+    /* Global variables */
+    public static Random r = new Random(7);
     public static double globalTime = 0.0;
-    public static PriorityQueue<String> EventManager = new PriorityQueue<>(); // String is temporary. and will
+    public static PriorityBlockingQueue<Event> EventManager = new PriorityBlockingQueue<>(5);
     // be changed over to 'jobs'.
 
     public static void main(String[] args) {
         /* Organise the inputs */
-        int Mean = Integer.parseInt(args[0]);
-        int Range = Integer.parseInt(args[1]);
+        int mean = Integer.parseInt(args[0]);
+        int range = Integer.parseInt(args[1]);
         int queueSize = Integer.parseInt(args[2]);
 
         System.out.println("args = " + Arrays.toString(args));
 
         /* Random number generator */
         Random r = new Random(7); // seed to keep it consistent during development.
-
-        System.out.println(r.nextDouble());
-
 
         /* Initialize the queues. These are the queues between the stages. */
         ArrayBlockingQueue<Item> q01 = new ArrayBlockingQueue<>(queueSize);
@@ -41,7 +39,7 @@ public class Main {
         Stage s4a = new Middle(q34, q45);
         Stage s4b = new Middle(q34, q45);
         Stage s5 = new End(q45);
-        
+
         /* Link stages sequence */
         s0.addNext(s1);
         s1.addPrev(s0);
@@ -60,8 +58,17 @@ public class Main {
         s4b.addPrev(s3);
         s4b.addNext(s5);
 
+        /* Get the Event Manager rolling */
+        EventManager.add(new Event(s0)); // Create an event from s0.
 
-        s1.execute();
-        s4b.execute();
+        while (globalTime < 10000000) {
+            Event current = EventManager.poll(); // If implemented right it should never be empty.
+
+            /* Increment global time */
+            globalTime = current.getEndTime();
+
+            /* Execute the from the owner of the event */
+            current.getOwner().execute();
+        }
     }
 }
