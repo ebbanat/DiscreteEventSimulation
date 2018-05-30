@@ -12,6 +12,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class Stage {
     /* Private variables */
+    private boolean blocked;
+    private boolean starving;
+
     private Item data; // The item currently in the stage.
     private LinkedList<Stage> next; // These are the stages that follow these.
     private LinkedList<Stage> prev; // These are the stages previous to this.
@@ -26,8 +29,8 @@ public class Stage {
         storagePrev = p;
     }
 
-    /* Main action of the storage */
-    public void process() {
+    /* Main action of the storage. This increments the simulated time AND moves the item along. */
+    public void execute() {
 
     }
 
@@ -41,5 +44,11 @@ public class Stage {
         prev.add(s);
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
 
+    public boolean isStarving(0 {
+        return starving;
+    })
 }
