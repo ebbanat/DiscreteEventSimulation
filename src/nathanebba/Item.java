@@ -12,14 +12,13 @@ import java.util.Arrays;
 
 public class Item {
     /* Private variables */
-    private String path; // Stores the path taken by the item through the stages and queues.
+    private String path = ""; // Stores the path taken by the item through the stages and queues.
     private double[] timeStamps; // Stores the enter and leaving times of the items from storages and queues.
     private int current;
 
 
     /* Constructor */
     Item() {
-        path = "";
         timeStamps = new double[50]; // 50 for now.
         current = 0;
     }
