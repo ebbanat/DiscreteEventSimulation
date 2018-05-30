@@ -58,8 +58,6 @@ public class Main {
         s4b.addPrev(s3);
         s4b.addNext(s5);
 
-//        s0.execute();
-
         /* Get the Event Manager rolling */
         EventManager.add(new Event(s0)); // Create an event from s0.
 
@@ -68,9 +66,11 @@ public class Main {
 
             /* Increment global time */
             globalTime = current.getEndTime();
+            System.out.println(globalTime);
 
             /* Execute the from the owner of the event */
-            current.getOwner().execute();
+            Stage runner = current.getOwner();
+            runner.execute("");
         }
     }
 }

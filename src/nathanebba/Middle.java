@@ -20,42 +20,44 @@ public class Middle extends Stage {
 
     /* Constructor */
     Middle(ArrayBlockingQueue<Item> p, ArrayBlockingQueue<Item> n) {
+        starve();
+        unblock();
         next = new LinkedList<>();
         prev = new LinkedList<>();
         storagePrev = p;
         storageNext = n;
     }
 
-    public void unblock() {
-        /* Put the item to the output queue */
-        storageNext.add(getData());
-        blocked = false;
-    }
-
-    public void unstarve() {
-        /* Grab an item from the input queue */
-        setData(storagePrev.poll());
-        EventManager.add(new Event(this));
-        starving = false;
-    }
-
     /* This aims to just process an item through but will 'starve' and 'block' accordingly. */
     @Override
-    public void execute() {
-        /* Assuming that global time has been incremented, Attempt to move the item out of the stage. */
-        if (storageNext.remainingCapacity() == 0) {
-            blocked = true;
-        } else {
-            /* move the item to the exit queue */
-            storageNext.add(getData());
-
-            /* Attempt to add another item to the stage */
-            if (storagePrev.isEmpty()) {
-                starving = true;
-            } else {
+    public void execute(String s) {
+        switch (s) { // Switch cases are called to unblock or feed stages. default ones are for general movement.
+            case "unblock":
+                /* Put the item to the output queue */
+                storageNext.add(getData());
+                unblock();
+                break;
+            case "feed":
+                /* Grab an item from the input queue */
                 setData(storagePrev.poll());
-                EventManager.add(new Event(this));
-            }
+//                EventManager.add(new Event(this));
+                feed();
+                break;
+            default:
+                /* Assuming that global time has been incremented, Attempt to move the item out of the stage. */
+                if (storageNext.remainingCapacity() == 0) {
+                    block();
+                } else {
+                    /* move the item to the exit queue */
+                    storageNext.add(getData());
+
+                    /* Attempt to add another item to the stage */
+                    if (storagePrev.isEmpty()) {
+                        starve();
+                    } else {
+                        setData(storagePrev.poll());
+                    }
+                }
         }
     }
 

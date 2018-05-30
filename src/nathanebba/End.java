@@ -21,7 +21,7 @@ public class End extends Stage {
     }
 
     @Override
-    public void execute() {
+    public void execute(String s) {
         System.out.println("End.execute");
     }
 

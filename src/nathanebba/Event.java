@@ -3,7 +3,7 @@ package nathanebba;
 import static nathanebba.Main.*;
 
 public class Event implements Comparable<Event> {
-    private Stage owner; // Pointer to the creator of the event.
+    private Stage owner; // Reference to the creator of the event. Used to determine who executes when the event is ran.
     private double endTime;
 
     /* Constructor */

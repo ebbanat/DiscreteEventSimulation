@@ -14,12 +14,12 @@ public abstract class Stage {
     private boolean starving;
     /* Main action of the storage. This increments the simulated time AND moves the item along. */
     private Item data;
-    public abstract void execute();
+    public abstract void execute(String s);
     public abstract void addNext(Stage s);
     public abstract void addPrev(Stage s);
 
     void setData(Item data) {
-        EventManager.add(new Event(this));
+        EventManager.add(new Event(this)); // Makes an event when an item is added to a stage.
         this.data = data;
     }
 
@@ -34,6 +34,10 @@ public abstract class Stage {
         this.blocked = true;
     }
 
+    public void unblock() {
+        this.blocked = false;
+    }
+
     public boolean isBlocked() {
         return this.blocked;
     }
@@ -44,5 +48,9 @@ public abstract class Stage {
 
     public boolean isStarving() {
         return this.starving;
+    }
+
+    public void feed() {
+        this.starving = false;
     }
 }
