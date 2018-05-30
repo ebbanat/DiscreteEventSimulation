@@ -7,21 +7,21 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 public class Main {
     /* Global variables */
+    public static int mean = -1;
+    public static int range = -1;
     public static Random r = new Random(7);
     public static double globalTime = 0.0;
     public static PriorityBlockingQueue<Event> EventManager = new PriorityBlockingQueue<>(5);
-    // be changed over to 'jobs'.
 
     public static void main(String[] args) {
         /* Organise the inputs */
-        int mean = Integer.parseInt(args[0]);
-        int range = Integer.parseInt(args[1]);
+        mean = Integer.parseInt(args[0]);
+        range = Integer.parseInt(args[1]);
         int queueSize = Integer.parseInt(args[2]);
 
         System.out.println("args = " + Arrays.toString(args));
 
         /* Random number generator */
-        Random r = new Random(7); // seed to keep it consistent during development.
 
         /* Initialize the queues. These are the queues between the stages. */
         ArrayBlockingQueue<Item> q01 = new ArrayBlockingQueue<>(queueSize);
@@ -57,6 +57,8 @@ public class Main {
         s4a.addNext(s5);
         s4b.addPrev(s3);
         s4b.addNext(s5);
+
+//        s0.execute();
 
         /* Get the Event Manager rolling */
         EventManager.add(new Event(s0)); // Create an event from s0.

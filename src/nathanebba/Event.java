@@ -1,7 +1,6 @@
 package nathanebba;
 
-import static nathanebba.Main.globalTime; // Global time
-import static nathanebba.Main.r; // Global random generator
+import static nathanebba.Main.*;
 
 public class Event implements Comparable<Event> {
     private Stage owner; // Pointer to the creator of the event.
@@ -9,7 +8,8 @@ public class Event implements Comparable<Event> {
 
     /* Constructor */
     Event(Stage owner) {
-        this.endTime = globalTime + r.nextDouble();
+        double productionTime = mean + (range * (r.nextDouble() - 0.5));
+        this.endTime = globalTime + productionTime;
         this.owner = owner;
     }
 

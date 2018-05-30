@@ -19,7 +19,7 @@ public class Item {
 
     /* Constructor */
     Item() {
-        timeStamps = new double[50]; // 50 for now.
+        timeStamps = new double[50]; // 50 slots for timestamps will be fined tuned later.
         current = 0;
     }
 

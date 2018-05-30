@@ -13,10 +13,6 @@ import static nathanebba.Main.EventManager; // Global data structure
     Middle stage that can only contain one item at a time and they must be able to block and starve based on conditions.
  */
 public class Middle extends Stage {
-    private boolean blocked = false;
-    private boolean starving = true;
-
-    private Item data; // The item currently in the stage.
     private LinkedList<Stage> next; // These are the stages that follow these.
     private LinkedList<Stage> prev; // These are the stages previous to this.
     private ArrayBlockingQueue<Item> storageNext; // Queue that stores items processed by the stage.
@@ -30,39 +26,36 @@ public class Middle extends Stage {
         storageNext = n;
     }
 
+    public void unblock() {
+        /* Put the item to the output queue */
+        storageNext.add(getData());
+        blocked = false;
+    }
+
+    public void unstarve() {
+        /* Grab an item from the input queue */
+        setData(storagePrev.poll());
+        EventManager.add(new Event(this));
+        starving = false;
+    }
+
+    /* This aims to just process an item through but will 'starve' and 'block' accordingly. */
     @Override
     public void execute() {
-        /* If the stage was starving */
-        if (starving) {
-            /* Grab an item from the previous queue. */
-            data = storagePrev.poll();
-            EventManager.add(new Event(this));
-            unstarve(); // Stage would no longer be starving.
-            return;
-        }
-
-        if (blocked) {
-            unblock();
-            return;
-        }
-
+        /* Assuming that global time has been incremented, Attempt to move the item out of the stage. */
         if (storageNext.remainingCapacity() == 0) {
-            /* block this stage */
-            block();
+            blocked = true;
         } else {
-            /* moves current item to the exiting queue */
-            storageNext.add(data);
-            data = null;
+            /* move the item to the exit queue */
+            storageNext.add(getData());
 
-            /* Attempt to grab an item from the entering queue */
+            /* Attempt to add another item to the stage */
             if (storagePrev.isEmpty()) {
-                starve();
+                starving = true;
             } else {
-                /* Grab an item from the previous queue */
-                data = storagePrev.poll();
+                setData(storagePrev.poll());
                 EventManager.add(new Event(this));
             }
-
         }
     }
 
@@ -74,21 +67,5 @@ public class Middle extends Stage {
     /* Adds a link to the previous stage done before this one. This can be called multiple times to add more than 1. */
     public void addPrev(Stage s) {
         prev.add(s);
-    }
-
-    public void block() {
-        blocked = true;
-    }
-
-    public void unblock() {
-        blocked = false;
-    }
-
-    public void starve() {
-        starving = true;
-    }
-
-    public void unstarve() {
-        starving = false;
     }
 }

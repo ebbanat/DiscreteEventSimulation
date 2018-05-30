@@ -26,22 +26,28 @@ public class Start extends Stage {
         storageNext = n;
     }
 
+    public void unblock() {
+        /* Put the item to the output queue */
+        storageNext.add(getData());
+        blocked = false;
+    }
+
+    /* This aims to make an item and put it in the exit queue but will block accordingly. */
     @Override
     public void execute() {
         /* Attempt to move an item into the exiting queue */
         if (storageNext.remainingCapacity() == 0) {
-            System.out.println("Start blocked.");
-            block();
+            blocked = true;
         } else {
-            /* moves current item to the exiting queue */
-            storageNext.add(new Item());
-
-            /* Create another event for Start */
-            EventManager.add(new Event(this));
-
-            /* Execute event for next stage */
-            executeNextStage();
-
+            /* make a new item and move it to the exit queue */
+            setData(new Item());
+            storageNext.add(getData());
+            /* Check if the following stages are starving */
+            for (Stage s : next) {
+                if (s.isStarving()) {
+                    
+                }
+            }
         }
     }
 
@@ -61,17 +67,5 @@ public class Start extends Stage {
     @Override
     public void addPrev(Stage s) {
         throw new IllegalStateException("Start stage does not need a previous stage.");
-    }
-
-    public boolean isBlocked() {
-        return this.blocked;
-    }
-
-    public void block() {
-        blocked = true;
-    }
-
-    public void unblock() {
-        blocked = false;
     }
 }
