@@ -1,10 +1,15 @@
 package nathanebba;
 
 import java.util.Arrays;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Main {
+    /* Global data structure */
+    public static double globalTime = 0.0;
+    public static PriorityQueue<String> EventManager = new PriorityQueue<>(); // String is temporary. and will
+    // be changed over to 'jobs'.
 
     public static void main(String[] args) {
         /* Organise the inputs */
@@ -60,5 +65,8 @@ public class Main {
 
         s4b.addPrev(s3);
         s4b.addNext(s5);
+
+        s1.execute();
+        s4b.execute();
     }
 }
