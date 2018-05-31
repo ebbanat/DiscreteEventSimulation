@@ -51,7 +51,7 @@ public class Middle extends Stage {
                 } else {
                     /* move the item to the exit queue */
                     storageNext.add(getData());
-                    /* check to see if one of the next stage is open */
+                    /* check to see if one of the next stage is starving */
                     for (Stage stage : next) {
                         if (stage.isStarving()) {
                             stage.execute("feed");

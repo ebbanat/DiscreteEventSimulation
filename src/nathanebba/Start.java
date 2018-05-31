@@ -34,11 +34,12 @@ public class Start extends Stage {
                 break;
             default:
                 /* Attempt to move an item into the exiting queue */
+                setData(new Item());
                 if (storageNext.remainingCapacity() == 0) {
                     block();
                 } else {
                     /* make a new item and move it to the exit queue */
-                    setData(new Item());
+//                    setData(new Item());
                     storageNext.add(getData());
                     /* feed next stages. only feed 1. */
                     for (Stage stage : next) {

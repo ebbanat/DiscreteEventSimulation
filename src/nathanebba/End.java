@@ -32,12 +32,23 @@ public class End extends Stage {
                 feed();
                 break;
             default:
-                /* get information out of the item */
-
-                /* delete the item */
-
+                /* get information out of the item and delete the item from the stage.*/
+                Item dataCollect = getData(); // Popping the data off.
+                /* Attempt to add another item to the stage */
+                if (storagePrev.isEmpty()) {
+                    starve();
+                } else {
+                    /* Grab an item from the entering queue */
+                    setData(storagePrev.poll());
+                    /* unblock previous stage */
+                    for (Stage stage : prev) {
+                        if (stage.isBlocked()) {
+                            stage.execute("unblock");
+                            break;
+                        }
+                    }
+            }
         }
-        System.out.println("End.execute");
     }
 
     @Override
