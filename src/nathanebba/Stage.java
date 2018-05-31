@@ -18,6 +18,7 @@ public abstract class Stage {
     public abstract void addNext(Stage s);
     public abstract void addPrev(Stage s);
 
+    /* Also makes an event so control comes back to the creator of the item to process it */
     void setData(Item data) {
         EventManager.add(new Event(this)); // Makes an event when an item is added to a stage.
         this.data = data;

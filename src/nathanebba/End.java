@@ -16,12 +16,27 @@ public class End extends Stage {
 
     /* Constructor */
     End(ArrayBlockingQueue<Item> p) {
+        starve();
         prev = new LinkedList<>();
         storagePrev = p;
     }
 
+    /* This takes items indefinetly and will get the statistics out them. This stage can only starve. */
     @Override
     public void execute(String s) {
+        /* These switch cases will be only be called if special checks have been put in place beforehand */
+        switch (s) {
+            case "feed":
+                /* Grab an item from the input queue */
+                setData(storagePrev.poll());
+                feed();
+                break;
+            default:
+                /* get information out of the item */
+
+                /* delete the item */
+
+        }
         System.out.println("End.execute");
     }
 

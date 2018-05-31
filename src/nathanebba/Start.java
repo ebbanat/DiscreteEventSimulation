@@ -17,6 +17,7 @@ public class Start extends Stage {
 
     /* Constructor */
     Start(ArrayBlockingQueue<Item> n) {
+        unblock();
         next = new LinkedList<>();
         storageNext = n;
     }
