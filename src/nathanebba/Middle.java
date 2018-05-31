@@ -28,10 +28,12 @@ public class Middle extends Stage {
         storageNext = n;
     }
 
-    /* This aims to just process an item through but will 'starve' and 'block' accordingly. */
+    /* This aims to just process an item through but will 'starve' and 'block' accordingly. execute will get
+     * called if an item has finished its production time. */
     @Override
     public void execute(String s) {
-        switch (s) { // Switch cases are called to unblock or feed stages. default ones are for general movement.
+        /* These switch cases will be only be called if special checks have been put in place beforehand */
+        switch (s) { // Switch cases are called to unblock or feed stages . default ones are for general movement.
             case "unblock":
                 /* Put the item to the output queue */
                 storageNext.add(getData());
@@ -40,7 +42,6 @@ public class Middle extends Stage {
             case "feed":
                 /* Grab an item from the input queue */
                 setData(storagePrev.poll());
-//                EventManager.add(new Event(this));
                 feed();
                 break;
             default:
@@ -50,12 +51,27 @@ public class Middle extends Stage {
                 } else {
                     /* move the item to the exit queue */
                     storageNext.add(getData());
-
+                    /* feed next stages */
+                    for (Stage stage : next) {
+                        if (stage.isStarving()) {
+                            stage.execute("feed");
+                            break;
+                        }
+                    }
                     /* Attempt to add another item to the stage */
                     if (storagePrev.isEmpty()) {
                         starve();
                     } else {
+                        /* Grab an item from the entering queue */
                         setData(storagePrev.poll());
+                        /* unblock previous stages */
+                        for (Stage stage : prev) {
+                            if (stage.isBlocked()) {
+                                stage.execute("unblock");
+                                break;
+                            }
+                        }
+
                     }
                 }
         }

@@ -24,11 +24,12 @@ public class Start extends Stage {
     /* This aims to make an item and put it in the exit queue but will block accordingly. */
     @Override
     public void execute(String s) {
+        /* These switch cases will be only be called if special checks have been put in place beforehand */
         switch (s) { // Switch cases are called to unblock or feed stages. default ones are for general movement.
             case "unblock":
                 /* Put the item to the output queue */
                 storageNext.add(getData());
-                block();
+                unblock();
                 break;
             default:
                 /* Attempt to move an item into the exiting queue */
@@ -38,11 +39,11 @@ public class Start extends Stage {
                     /* make a new item and move it to the exit queue */
                     setData(new Item());
                     storageNext.add(getData());
-                    /* Check if the following stages are starving */
+                    /* feed next stages. only feed 1. */
                     for (Stage stage : next) {
                         if (stage.isStarving()) {
                             stage.execute("feed");
-                            break; // You only want do it to one stage.
+                            break; // Only want to feed one stage. As only 1 item as been released.
                         }
                     }
                 }
