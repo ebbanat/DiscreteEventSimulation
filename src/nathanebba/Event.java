@@ -8,6 +8,7 @@ public class Event implements Comparable<Event> {
 
     /* Constructor */
     Event(Stage owner) {
+//        System.out.println(owner.getName());
         double productionTime = mean + (range * (r.nextDouble() - 0.5));
         this.endTime = globalTime + productionTime;
         this.owner = owner;

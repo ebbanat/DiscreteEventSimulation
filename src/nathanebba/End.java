@@ -1,5 +1,6 @@
 package nathanebba;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -13,40 +14,38 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class End extends Stage {
     private LinkedList<Stage> prev;
     private ArrayBlockingQueue<Item> storagePrev;
+    private ArrayList<Item> itemCollection = new ArrayList<>();
 
     /* Constructor */
-    End(ArrayBlockingQueue<Item> p) {
+    End(ArrayBlockingQueue<Item> p, String name) {
+        setName(name);
         starve();
         prev = new LinkedList<>();
         storagePrev = p;
     }
 
-    /* This takes items indefinetly and will get the statistics out them. This stage can only starve. */
+    /* This takes items indefinitely and will get the statistics out them. This stage can only starve. */
     @Override
-    public void execute(String s) {
-        /* These switch cases will be only be called if special checks have been put in place beforehand */
-        switch (s) {
-            case "feed":
-                /* Grab an item from the input queue */
-                setData(storagePrev.poll());
-                feed();
-                break;
-            default:
-                /* get information out of the item and delete the item from the stage.*/
-                Item dataCollect = getData(); // Popping the data off.
-                /* Attempt to add another item to the stage */
-                if (storagePrev.isEmpty()) {
-                    starve();
-                } else {
-                    /* Grab an item from the entering queue */
-                    setData(storagePrev.poll());
-                    /* unblock previous stage */
-                    for (Stage stage : prev) {
-                        if (stage.isBlocked()) {
-                            stage.execute("unblock");
-                            break;
-                        }
-                    }
+    public void execute() {
+        /* Check if the call is being made by an unstarve */
+        if (this.isStarving()) {
+            feed();
+            itemCollection.add(getData()); // Also deletes the item
+        }
+
+        /* Attempt to grab an item */
+        if (storagePrev.isEmpty()) {
+            /* Starve self */
+            starve();
+        } else {
+            /* Grab an item from previous storage and stores it.*/
+            setData(storagePrev.poll()); // Makes an event as well.
+            /* Unblock previous stage/s */
+            for (Stage s : prev){
+                if (s.isBlocked()) {
+                    s.execute();
+                    break; // out of the loop. You only want to unblock one stage.
+                }
             }
         }
     }

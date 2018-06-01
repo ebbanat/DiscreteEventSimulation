@@ -10,11 +10,13 @@ import static nathanebba.Main.EventManager;
     Stages process items through based on a random number and must be able to block and starve based on conditions.
  */
 public abstract class Stage {
+    private String name;
     private boolean blocked;
     private boolean starving;
-    /* Main action of the storage. This increments the simulated time AND moves the item along. */
     private Item data;
-    public abstract void execute(String s);
+
+    /* Main action of the storage. This increments the simulated time AND moves the item along. */
+    public abstract void execute();
     public abstract void addNext(Stage s);
     public abstract void addPrev(Stage s);
 
@@ -53,5 +55,17 @@ public abstract class Stage {
 
     public void feed() {
         this.starving = false;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean dataEmpty() {
+        return (data == null);
     }
 }

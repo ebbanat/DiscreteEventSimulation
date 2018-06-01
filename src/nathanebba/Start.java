@@ -16,7 +16,8 @@ public class Start extends Stage {
     private ArrayBlockingQueue<Item> storageNext;
 
     /* Constructor */
-    Start(ArrayBlockingQueue<Item> n) {
+    Start(ArrayBlockingQueue<Item> n, String name) {
+        setName(name);
         unblock();
         next = new LinkedList<>();
         storageNext = n;
@@ -24,31 +25,29 @@ public class Start extends Stage {
 
     /* This aims to make an item and put it in the exit queue but will block accordingly. */
     @Override
-    public void execute(String s) {
-        /* These switch cases will be only be called if special checks have been put in place beforehand */
-        switch (s) { // Switch cases are called to unblock or feed stages. default ones are for general movement.
-            case "unblock":
-                /* Put the item to the output queue */
-                storageNext.add(getData());
-                unblock();
-                break;
-            default:
-                /* Attempt to move an item into the exiting queue */
-                setData(new Item());
-                if (storageNext.remainingCapacity() == 0) {
-                    block();
-                } else {
-                    /* make a new item and move it to the exit queue */
-//                    setData(new Item());
-                    storageNext.add(getData());
-                    /* feed next stages. only feed 1. */
-                    for (Stage stage : next) {
-                        if (stage.isStarving()) {
-                            stage.execute("feed");
-                            break; // Only want to feed one stage. As only 1 item as been released.
-                        }
-                    }
+    public void execute() {
+
+        /* Check if the call is being made by an unblock */
+        if (this.isBlocked()) {
+            unblock();
+        }
+
+        /* Attempt to pop item */
+        if (storageNext.remainingCapacity() == 0) {
+            block();
+        } else {
+            /* Make a new item */
+            setData(new Item());
+            storageNext.add(getData());
+            /* Item popped out */
+
+            /* Unstarve next stage/s */
+            for (Stage s : next) {
+                if (s.isStarving()) {
+                    s.execute();
+                    break; // out of the loop. You only want to feed one stage.
                 }
+            }
         }
     }
 

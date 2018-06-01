@@ -19,8 +19,9 @@ public class Middle extends Stage {
     private ArrayBlockingQueue<Item> storagePrev; // Queue that stores items that going to be processed.
 
     /* Constructor */
-    Middle(ArrayBlockingQueue<Item> p, ArrayBlockingQueue<Item> n) {
-        starve();
+    Middle(ArrayBlockingQueue<Item> p, ArrayBlockingQueue<Item> n, String name) {
+        setName(name); // Used to identify the stage.
+        starve(); // Middle stages start off starving.
         unblock();
         next = new LinkedList<>();
         prev = new LinkedList<>();
@@ -28,52 +29,51 @@ public class Middle extends Stage {
         storageNext = n;
     }
 
-    /* This aims to just process an item through but will 'starve' and 'block' accordingly. execute will get
-     * called if an item has finished its production time. */
+    /* Calling execute means that there will be updates relating to item positions and stage statuses. */
     @Override
-    public void execute(String s) {
-        /* These switch cases will be only be called if special checks have been put in place beforehand */
-        switch (s) { // Switch cases are called to unblock or feed stages . default ones are for general movement.
-            case "unblock":
-                /* Put the item to the output queue */
-                storageNext.add(getData());
-                unblock();
-                break;
-            case "feed":
-                /* Grab an item from the input queue */
-                setData(storagePrev.poll());
-                feed();
-                break;
-            default:
-                /* Assuming that global time has been incremented, Attempt to move the item out of the stage. */
-                if (storageNext.remainingCapacity() == 0) {
-                    block();
-                } else {
-                    /* move the item to the exit queue */
-                    storageNext.add(getData());
-                    /* check to see if one of the next stage is starving */
-                    for (Stage stage : next) {
-                        if (stage.isStarving()) {
-                            stage.execute("feed");
-                            break;
-                        }
-                    }
-                    /* Attempt to add another item to the stage */
-                    if (storagePrev.isEmpty()) {
-                        starve();
-                    } else {
-                        /* Grab an item from the entering queue */
-                        setData(storagePrev.poll());
-                        /* unblock previous stages */
-                        for (Stage stage : prev) {
-                            if (stage.isBlocked()) {
-                                stage.execute("unblock");
-                                break;
-                            }
-                        }
+    public void execute() {
+        /* Check if the call is being made by an unblock */
+        if (this.isBlocked()) {
+            unblock(); // this stage.
+        }
 
+        /* Check if the call is being made by an unstarve */
+        if (this.isStarving()) {
+            feed();
+        } else {
+            /* Attempt to pop item */
+            if (storageNext.remainingCapacity() == 0) {
+                block();
+                return; // Item is still in the stage. You don't want to grab another item yet.
+            } else {
+                storageNext.add(getData());
+                /* Item popped out */
+
+                /* Unstarve next stage/s */
+                for (Stage s : next) {
+                    if (s.isStarving()) {
+                        s.execute();
+                        break; // out of the loop. You only want to feed one stage.
                     }
                 }
+            }
+        }
+
+        /* Attempt to grab an item */
+        if (storagePrev.isEmpty()) {
+            /* Starve self */
+            starve();
+        } else {
+            /* Grab an item from previous storage */
+            setData(storagePrev.poll()); // This also makes an event.
+
+            /* Unblock previous stage/s */
+            for (Stage s : prev) {
+                if (s.isBlocked()) {
+                    s.execute();
+                    break; // out of the loop. You only want to unblock one stage.
+                }
+            }
         }
     }
 
