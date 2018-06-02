@@ -13,6 +13,7 @@ public class Main {
     public static Random r = new Random(7);
     public static double globalTime = 0.0;
     public static PriorityBlockingQueue<Event> EventManager = new PriorityBlockingQueue<>(5);
+    public static ArrayList<Item> FinishedItems = new ArrayList<>();
 
     public static void main(String[] args) {
         /* Organise the inputs */
@@ -81,8 +82,14 @@ public class Main {
         }
 
         /* Data output */
+        System.out.println();
         s1.output();
         s2a.output();
 
+        System.out.println();
+
+        double[] tempArrDoub = FinishedItems.get(1).getTimeStamps();
+        System.out.println(FinishedItems.get(1));
+//        FinishedItems.get(1);
     }
 }

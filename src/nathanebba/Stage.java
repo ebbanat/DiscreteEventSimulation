@@ -3,6 +3,7 @@ package nathanebba;
 import java.util.ArrayList;
 
 import static nathanebba.Main.EventManager;
+import static nathanebba.Main.globalTime;
 
 /*
     Programmer: Nathan Ebba
@@ -29,12 +30,17 @@ public abstract class Stage {
     /* Also makes an event so control comes back to the creator of the item to process it */
     void setData(Item data) {
         EventManager.add(new Event(this)); // Makes an event when an item is added to a stage.
+        data.timeStamp(globalTime);
+        data.addPath(name + " ");
         this.data = data;
     }
 
     /* Return and delete the data */
     Item getData() {
         Item temp = this.data;
+        if (temp != null) {
+            temp.timeStamp(globalTime);
+        }
         this.data = null;
         return temp;
     }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import static nathanebba.Main.FinishedItems;
+
 /*
     Programmer: Nathan Ebba
     Date: 30/05/2017
@@ -14,7 +16,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class End extends Stage {
     private LinkedList<Stage> prev;
     private ArrayBlockingQueue<Item> storagePrev;
-    private ArrayList<Item> itemCollection = new ArrayList<>();
 
     /* Constructor */
     End(ArrayBlockingQueue<Item> p, String name) {
@@ -30,7 +31,7 @@ public class End extends Stage {
         /* Check if the call is being made by an unstarve */
         if (this.isStarving()) {
             feed();
-            itemCollection.add(getData()); // Also deletes the item
+            FinishedItems.add(getData()); // Also deletes the item
 //            System.out.println("SIZE: " + itemCollection.size());
         }
 

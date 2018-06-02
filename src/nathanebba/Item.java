@@ -13,10 +13,14 @@ import java.util.Arrays;
 public class Item {
     /* Private variables */
     private String path = ""; // Stores the path taken by the item through the stages and queues.
+    private double[] timeStamps; // Stores the enter and leaving times of the items from storages and queues.
+    private int current;
 
 
     /* Constructor */
     Item() {
+        timeStamps = new double[12]; // 50 slots for timestamps will be fined tuned later.
+        current = 0;
     }
 
     public void addPath(String p) {
@@ -27,4 +31,17 @@ public class Item {
         return path;
     }
 
+    public void timeStamp(double t) {
+        timeStamps[current] = t;
+        incrementCurrent();
+    }
+
+    /* Helper functions */
+    private void incrementCurrent() {
+        current++;
+    }
+
+    public double[] getTimeStamps() {
+        return timeStamps;
+    }
 }
