@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static nathanebba.Main.EventManager; // Global data structure
+import static nathanebba.Main.globalTime;
 
 /*
     Programmer: Nathan Ebba
@@ -35,15 +36,18 @@ public class Middle extends Stage {
         /* Check if the call is being made by an unblock */
         if (this.isBlocked()) {
             unblock(); // this stage.
+            incrementBlockedTime(globalTime - getTime());
         }
 
-        /* Check if the call is being made by an unstarve */
+        /* Check if the call is being made by an unstarve. */
         if (this.isStarving()) {
-            feed();
+            feed(); // Unstarve this stage.
+            incrementStarvedTime(globalTime - getTime());
         } else {
             /* Attempt to pop item */
             if (storageNext.remainingCapacity() == 0) {
                 block();
+                setTime(globalTime);
                 return; // Item is still in the stage. You don't want to grab another item yet.
             } else {
                 storageNext.add(getData());
@@ -63,8 +67,12 @@ public class Middle extends Stage {
         if (storagePrev.isEmpty()) {
             /* Starve self */
             starve();
+            setTime(globalTime);
         } else {
             /* Grab an item from previous storage */
+            if (!dataEmpty()) {
+                throw new IllegalStateException("Data should be 'null' when attempting to set a new one.");
+            }
             setData(storagePrev.poll()); // This also makes an event.
 
             /* Unblock previous stage/s */

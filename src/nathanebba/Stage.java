@@ -1,5 +1,7 @@
 package nathanebba;
 
+import java.util.ArrayList;
+
 import static nathanebba.Main.EventManager;
 
 /*
@@ -14,6 +16,10 @@ public abstract class Stage {
     private boolean blocked;
     private boolean starving;
     private Item data;
+    private double time = 0.0;
+    private double starveTime = 0.0;
+    private double blockedTime = 0.0;
+    private double productionTime = 0.0;
 
     /* Main action of the storage. This increments the simulated time AND moves the item along. */
     public abstract void execute();
@@ -68,4 +74,34 @@ public abstract class Stage {
     public boolean dataEmpty() {
         return (data == null);
     }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public void incrementBlockedTime(double t) {
+        blockedTime += t;
+    }
+
+    public void incrementStarvedTime(double t) {
+        starveTime += t;
+    }
+
+    public void incrementProductionTime(double t) {
+        productionTime += t;
+    }
+
+    public void output() {
+        System.out.println(name);
+        double percentage = productionTime / (productionTime + blockedTime + starveTime);
+        percentage *= 100;
+        System.out.println("Production Time: " + percentage + "%");
+        System.out.println("Blocked Time: " + this.blockedTime);
+        System.out.println("Starved Time: " + this.starveTime);
+    }
+
 }

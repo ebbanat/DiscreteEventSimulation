@@ -8,9 +8,27 @@ public class Event implements Comparable<Event> {
 
     /* Constructor */
     Event(Stage owner) {
-//        System.out.println(owner.getName());
-        double productionTime = mean + (range * (r.nextDouble() - 0.5));
+        double productionTime;
+        String name = owner.getName();
+        switch (name) { // Special cases for the production times.
+            case "s2a":
+                productionTime = 2*mean + (2*range * (r.nextDouble() - 0.5));
+                break;
+            case "s4b":
+                productionTime = 2*mean + (2*range * (r.nextDouble() - 0.5));
+                break;
+            case "s2b":
+                productionTime = mean + (0.5*range * (r.nextDouble() - 0.5));
+                break;
+            case "s4a":
+                productionTime = mean + (0.5*range * (r.nextDouble() - 0.5));
+                break;
+            default:
+                productionTime = mean + (range * (r.nextDouble() - 0.5));
+                break;
+        }
         this.endTime = globalTime + productionTime;
+        owner.incrementProductionTime(productionTime); // Adds the production time of an item to the owner(Stage).
         this.owner = owner;
     }
 

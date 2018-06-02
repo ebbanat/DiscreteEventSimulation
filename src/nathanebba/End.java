@@ -31,6 +31,7 @@ public class End extends Stage {
         if (this.isStarving()) {
             feed();
             itemCollection.add(getData()); // Also deletes the item
+//            System.out.println("SIZE: " + itemCollection.size());
         }
 
         /* Attempt to grab an item */

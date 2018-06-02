@@ -18,6 +18,7 @@ public class Start extends Stage {
     /* Constructor */
     Start(ArrayBlockingQueue<Item> n, String name) {
         setName(name);
+        setData(new Item()); // Start it off with an item inside it.
         unblock();
         next = new LinkedList<>();
         storageNext = n;
@@ -26,18 +27,18 @@ public class Start extends Stage {
     /* This aims to make an item and put it in the exit queue but will block accordingly. */
     @Override
     public void execute() {
-
         /* Check if the call is being made by an unblock */
         if (this.isBlocked()) {
             unblock();
+            System.out.println("Start unblock");
         }
 
         /* Attempt to pop item */
         if (storageNext.remainingCapacity() == 0) {
+            System.out.println("Start blocked");
             block();
+            return; // End execution as item was not popped, you don't want to set a new one.
         } else {
-            /* Make a new item */
-            setData(new Item());
             storageNext.add(getData());
             /* Item popped out */
 
@@ -49,6 +50,12 @@ public class Start extends Stage {
                 }
             }
         }
+
+        /* Make an item. */
+        if (!dataEmpty()) {
+            throw new IllegalStateException("Data should be 'null' when attempting to set a new one.");
+        }
+        setData(new Item());
     }
 
     /* Add a next stage to be done after this stage. This can be called multiple times to add more than 1 stage. */

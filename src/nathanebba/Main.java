@@ -1,5 +1,6 @@
 package nathanebba;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -29,7 +30,7 @@ public class Main {
         ArrayBlockingQueue<Item> q45 = new ArrayBlockingQueue<>(queueSize);
 
         /* Initialize the Stages. As well as link them to their queues. */
-        Stage s0 = new Start(q01, "s0");
+        Stage s0 = new Start(q01, "s0"); // Also creates an event inside it.
         Stage s1 = new Middle(q01, q12, "s1");
         Stage s2a = new Middle(q12, q23, "s2a");
         Stage s2b = new Middle(q12, q23, "s2b");
@@ -66,9 +67,7 @@ public class Main {
         s5.addPrev(s4a);
         s5.addPrev(s4b);
 
-        /* First event s0 making an item */
-        EventManager.add(new Event(s0)); // Create an event from s0.
-
+        /* Simulation */
         while (globalTime < 10000000) { // 10 million time units for the simulation time
             Event current = EventManager.poll(); // If implemented right it should never be empty.
 
@@ -80,5 +79,10 @@ public class Main {
             Stage runner = current.getOwner();
             runner.execute();
         }
+
+        /* Data output */
+        s1.output();
+        s2a.output();
+
     }
 }
