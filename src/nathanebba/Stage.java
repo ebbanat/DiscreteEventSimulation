@@ -18,10 +18,9 @@ public abstract class Stage {
     private boolean starving;
     private Item data;
     private double time = 0.0;
-    private double starveTime = 0.0;
-    private double blockedTime = 0.0;
-    private double productionTime = 0.0;
-    private int itemCounter = 0;
+    private double starveTime = 0.0; // Same thing as below but for starve
+    private double blockedTime = 0.0; // Counts how much an stage is blocked
+    private double productionTime = 0.0; // Same thing above but for production
 
     /* Main action of the storage. This increments the simulated time AND moves the item along. */
     public abstract void execute();
@@ -34,7 +33,6 @@ public abstract class Stage {
         data.timeStamp(globalTime);
         data.addPath(name + " ");
         this.data = data;
-        itemCounter++;
     }
 
     /* Return and delete the data */
@@ -47,11 +45,11 @@ public abstract class Stage {
         return temp;
     }
 
-    public void block() {
+    void block() {
         this.blocked = true;
     }
 
-    public void unblock() {
+    void unblock() {
         this.blocked = false;
     }
 
@@ -59,7 +57,7 @@ public abstract class Stage {
         return this.blocked;
     }
 
-    public void starve() {
+    void starve() {
         this.starving = true;
     }
 
@@ -67,11 +65,11 @@ public abstract class Stage {
         return this.starving;
     }
 
-    public void feed() {
+    void feed() {
         this.starving = false;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
@@ -79,23 +77,23 @@ public abstract class Stage {
         return name;
     }
 
-    public boolean dataEmpty() {
+    boolean dataEmpty() {
         return (data == null);
     }
 
-    public void setTime(double time) {
+    void setTime(double time) {
         this.time = time;
     }
 
-    public double getTime() {
+    double getTime() {
         return time;
     }
 
-    public void incrementBlockedTime(double t) {
+    void incrementBlockedTime(double t) {
         blockedTime += t;
     }
 
-    public void incrementStarvedTime(double t) {
+    void incrementStarvedTime(double t) {
         starveTime += t;
     }
 
@@ -104,12 +102,12 @@ public abstract class Stage {
     }
 
     public String output() {
-        String output = name + "  ";
+        String output = "";
 
-        output += String.format("%4.2f", (productionTime / (productionTime + blockedTime + starveTime) ) * 100) + "%  ";
-        output += String.format("%4.2f", this.blockedTime) + "  ";
-        output += String.format("%4.2f", this.starveTime) + "  ";
-        output += Integer.toString(this.itemCounter);
+        output += name + "    ";
+        output += String.format("%4.2f", (productionTime / (productionTime + blockedTime + starveTime) ) * 100) + "%    ";
+        output += String.format("%4.2f", this.blockedTime) + "    ";
+        output += String.format("%4.2f", this.starveTime) + "    ";
 
         return output;
     }

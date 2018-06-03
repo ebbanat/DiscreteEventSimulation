@@ -3,7 +3,7 @@ package nathanebba;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import static nathanebba.Main.EventManager; // Global data structure
+
 import static nathanebba.Main.globalTime;
 
 /*
