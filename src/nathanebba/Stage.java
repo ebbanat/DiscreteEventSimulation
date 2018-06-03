@@ -21,6 +21,7 @@ public abstract class Stage {
     private double starveTime = 0.0;
     private double blockedTime = 0.0;
     private double productionTime = 0.0;
+    private int itemCounter = 0;
 
     /* Main action of the storage. This increments the simulated time AND moves the item along. */
     public abstract void execute();
@@ -33,6 +34,7 @@ public abstract class Stage {
         data.timeStamp(globalTime);
         data.addPath(name + " ");
         this.data = data;
+        itemCounter++;
     }
 
     /* Return and delete the data */
@@ -101,13 +103,15 @@ public abstract class Stage {
         productionTime += t;
     }
 
-    public void output() {
-        System.out.println(name);
-        double percentage = productionTime / (productionTime + blockedTime + starveTime);
-        percentage *= 100;
-        System.out.println("Production Time: " + percentage + "%");
-        System.out.println("Blocked Time: " + this.blockedTime);
-        System.out.println("Starved Time: " + this.starveTime);
+    public String output() {
+        String output = name + "  ";
+
+        output += String.format("%4.2f", (productionTime / (productionTime + blockedTime + starveTime) ) * 100) + "%  ";
+        output += String.format("%4.2f", this.blockedTime) + "  ";
+        output += String.format("%4.2f", this.starveTime) + "  ";
+        output += Integer.toString(this.itemCounter);
+
+        return output;
     }
 
 }

@@ -2,6 +2,8 @@ package nathanebba;
 
 import java.util.Arrays;
 
+import static nathanebba.Main.itemsCreated;
+
 /*
     Programmer: Nathan Ebba
     Date: 26/05/2018
@@ -21,6 +23,7 @@ public class Item {
     Item() {
         timeStamps = new double[12]; // 50 slots for timestamps will be fined tuned later.
         current = 0;
+        itemsCreated++;
     }
 
     public void addPath(String p) {

@@ -1,10 +1,10 @@
 package nathanebba;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static nathanebba.Main.FinishedItems;
+import static nathanebba.Main.globalTime;
 
 /*
     Programmer: Nathan Ebba
@@ -31,14 +31,15 @@ public class End extends Stage {
         /* Check if the call is being made by an unstarve */
         if (this.isStarving()) {
             feed();
-            FinishedItems.add(getData()); // Also deletes the item
-//            System.out.println("SIZE: " + itemCollection.size());
+            incrementStarvedTime(globalTime - getTime());
         }
 
+        FinishedItems.add(getData()); // Also deletes the item
         /* Attempt to grab an item */
         if (storagePrev.isEmpty()) {
             /* Starve self */
             starve();
+            setTime(globalTime);
         } else {
             /* Grab an item from previous storage and stores it.*/
             setData(storagePrev.poll()); // Makes an event as well.

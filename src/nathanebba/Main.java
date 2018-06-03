@@ -14,6 +14,7 @@ public class Main {
     public static double globalTime = 0.0;
     public static PriorityBlockingQueue<Event> EventManager = new PriorityBlockingQueue<>(5);
     public static ArrayList<Item> FinishedItems = new ArrayList<>();
+    public static int itemsCreated = 0; // Counts how many items are created at the start
 
     public static void main(String[] args) {
         /* Organise the inputs */
@@ -21,7 +22,7 @@ public class Main {
         range = Integer.parseInt(args[1]);
         int queueSize = Integer.parseInt(args[2]);
 
-        System.out.println("args = " + Arrays.toString(args));
+//        System.out.println("args = " + Arrays.toString(args));
 
         /* Initialize the queues. These are the queues between the stages. */
         ArrayBlockingQueue<Item> q01 = new ArrayBlockingQueue<>(queueSize);
@@ -74,7 +75,7 @@ public class Main {
 
             /* Increment global time */
             globalTime = current.getEndTime();
-            System.out.println(globalTime);
+//            System.out.println(globalTime);
 
             /* Execute the from the owner of the event */
             Stage runner = current.getOwner();
@@ -82,14 +83,54 @@ public class Main {
         }
 
         /* Data output */
-        System.out.println();
-        s1.output();
-        s2a.output();
+        System.out.println("Stage  Prod(%)  Starve(t)  Block(t)");
+
+        System.out.println(s0.output());
+        System.out.println(s1.output());
+        System.out.println(s2a.output());
+        System.out.println(s2b.output());
+        System.out.println(s3.output());
+        System.out.println(s4a.output());
+        System.out.println(s4b.output());
+        System.out.println(s5.output());
 
         System.out.println();
 
         double[] tempArrDoub = FinishedItems.get(1).getTimeStamps();
-        System.out.println(FinishedItems.get(1));
-//        FinishedItems.get(1);
+
+        /* Paths output. */
+        int XX = 0, AA = 0, AB = 0, BA = 0, BB = 0;
+
+        for (Item i : FinishedItems) {
+            if (i==null) {
+                // ignore
+            } else {
+                switch (i.getPath()) {
+                    case "s0 s1 s2a s3 s4a s5 ":
+                        AA++;
+                        break;
+                    case "s0 s1 s2a s3 s4b s5 ":
+                        AB++;
+                        break;
+                    case "s0 s1 s2b s3 s4a s5 ":
+                        BA++;
+                        break;
+                    case "s0 s1 s2b s3 s4b s5 ":
+                        BB++;
+                        break;
+                    default:
+                        throw new IllegalStateException("Path for item unaccounted.");
+                }
+            }
+        }
+
+        System.out.println("Path   Items");
+        System.out.println("s2a - s4a: " + AA);
+        System.out.println("s2a - s4b: " + AB);
+        System.out.println("s2b - s4a: " + BA);
+        System.out.println("s2b - s4b: " + BB);
+
+        int total = AA + AB + BA + BB;
+        System.out.println("\nTotal items: " + Integer.toString(total));
     }
 }

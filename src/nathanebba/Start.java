@@ -3,6 +3,8 @@ package nathanebba;
 import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import static nathanebba.Main.globalTime;
+
 /*
     Programmer: Nathan Ebba
     Date: 30/05/2018
@@ -30,13 +32,13 @@ public class Start extends Stage {
         /* Check if the call is being made by an unblock */
         if (this.isBlocked()) {
             unblock();
-            System.out.println("Start unblock");
+            incrementBlockedTime(globalTime - getTime());
         }
 
         /* Attempt to pop item */
         if (storageNext.remainingCapacity() == 0) {
-            System.out.println("Start blocked");
             block();
+            setTime(globalTime);
             return; // End execution as item was not popped, you don't want to set a new one.
         } else {
             storageNext.add(getData());
